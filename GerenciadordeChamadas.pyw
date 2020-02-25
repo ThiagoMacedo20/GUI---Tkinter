@@ -1,129 +1,130 @@
 from tkinter import *
 from PIL import Image,ImageTk
-root=Tk()
-root.title('Discador de Chamada V1.0')
-root.iconbitmap('image/phone.ico')
-root.resizable(FALSE,FALSE)
 
-# Dimensões da janela Inicial
-largura=800
-altura=500
-largura_screen=root.winfo_screenwidth()
-altura_screen=root.winfo_screenheight()
-posx=int((largura_screen/2)-largura/2)
-posy=int(altura_screen/2-altura/2)
-# Menu de Opções
-meuMenu=Menu(root)
+class CallManager:
+    def __init__(self, master):
+        self.master=master
+        self.initialize(master)
+        
+    def initialize(self,master):  
+        #Definições inicias
+        master.title('Discador de Chamada V1.0')
+        master.iconbitmap('image/phone.ico')
+        master.resizable(FALSE,FALSE)
+        # Variáveis da personalização dos botões
+        self.atriLargura=10
+        self.atriAltura=3
+        self.atriBd=3
+        self.atriRelief=GROOVE
+        self.atriBg='#e0ebeb'
+        self.atriFg='#002e4d'
+        self.atriFont=('Verdana 25 bold')
+        #Frame
+        self.frameA=Frame(master).place()
+        self.frameB=Frame(master).place()
+        #Imagem de fundo
+        self.imagem=Label(self.frameA)
+        self.amostra=ImageTk.PhotoImage(Image.open('image/imagemdebg.png'))
+        self.imagem['image']=self.amostra
+        self.imagem.place(x=0,y=0)
+        ## Dimensões da janela 
+        self.largura=800
+        self.altura=500
+        self.larguraScreen=master.winfo_screenwidth()
+        self.alturaScreen=master.winfo_screenheight()
+        self.posx=int(self.larguraScreen/2-self.largura/2)
+        self.posy=int(self.alturaScreen/2-self.altura/2)
+        # menu inicial
+        self.meuMenu=Menu(root)
 
-file_menu=Menu(meuMenu,tearoff=0)
-file_menu.add_command(label="Novo")
-file_menu.add_command(label="Importar")
-file_menu.add_command(label="Exportar")
+        self.fileMenu=Menu(self.meuMenu,tearoff=0)
+        self.fileMenu.add_command(label="Novo")
+        self.fileMenu.add_command(label="Importar")
+        self.fileMenu.add_command(label="Exportar")
 
+        self.helpMenu=Menu(self.meuMenu,tearoff=0)
+        self.configMenu=Menu(self.meuMenu,tearoff=0)
 
-help_menu=Menu(meuMenu,tearoff=0)
-config_menu=Menu(meuMenu,tearoff=0)
+        self.meuMenu.add_cascade(label='Arquivo', menu=self.fileMenu)
+        self.meuMenu.add_cascade(label='Manual', menu=self.helpMenu)
+        self.meuMenu.add_cascade(label='Configuração de rede',menu=self.configMenu)
+        self.meuMenu.add_command(label='Exit',command=master.destroy)
+        self.master.config(menu=self.meuMenu)
+        # Botões primeiro frame
 
+        self.btBuscar=Button(self.frameA,command=self.widgetPesquisar,text='Pesquisar',bd=self.atriBd,relief=self.atriRelief,fg=self.atriFg,
+        width=self.atriLargura,height=self.atriAltura,bg=self.atriBg,font=self.atriFont)
+        self.btBuscar.place(x=80,y=50)
+        self.btBuscar.bind('<Return>') 
 
-meuMenu.add_cascade(label='Arquivo', menu=file_menu)
-meuMenu.add_cascade(label='Manual', menu=help_menu)
-meuMenu.add_cascade(label='Configuração de rede',menu=config_menu)
-meuMenu.add_command(label='Exit',command=root.destroy)
-root.config(menu=meuMenu)
-# Imagem de fundo
+        self.btnInserir=Button(self.frameA,command=self.widgetInserir,text='Inserir',bd=self.atriBd,relief=self.atriRelief,fg=self.atriFg,
+        width=self.atriLargura,height=self.atriAltura,bg=self.atriBg,font=self.atriFont)
+        self.btnInserir.place(x=480,y=50)
+        self.btnInserir.bind('<Return>')
+        
+        # Botões segundo frame
 
-photo=ImageTk.PhotoImage(Image.open('image/imagemdebg.png'))
-label = Label(root,image=photo)# keep a reference!
-label.place(x=0,y=0)
+        self.btnLogs=Button(self.frameB,command=self.widgetLogs,text='Logs',bd=self.atriBd,relief=self.atriRelief,fg=self.atriFg,
+        width=self.atriLargura,height=self.atriAltura,bg=self.atriBg,font=self.atriFont)
+        self.btnLogs.place(x=80,y=250)
+        self.btnLogs.bind('<Return>')
 
+        self.btnExecutar=Button(self.frameB,text='Executar',bd=self.atriBd,relief=self.atriRelief,fg=self.atriFg,
+        width=self.atriLargura,height=self.atriAltura,bg=self.atriBg,font=self.atriFont)
+        self.btnExecutar.place(x=480,y=250)
+        self.btnExecutar.bind('<Return>')
+        #Tamanho da tela 
+        self.master.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+    def widgetPesquisar(self):
+        #Inicialização da top level
+        self.top=Toplevel()
+        self.top.title('Discador de Chamada V1.0')
+        self.top.iconbitmap('image/phone.ico')
+        self.top.resizable(FALSE,FALSE)
+        self.top.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+        #Imagem de fundo    
+        self.imagem2=Label(self.top)
+        self.imagem2['image']=self.amostra
+        self.imagem2.place(x=0,y=0)
+    def widgetInserir(self):
+        self.top=Toplevel()
+        self.top.title('Discador de Chamada V1.0')
+        self.top.iconbitmap('image/phone.ico')
+        self.top.resizable(FALSE,FALSE)
+        self.top.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+        #Imagem de fundo    
+        self.imagem3=Label(self.top)
+        self.imagem3['image']=self.amostra
+        self.imagem3.place(x=0,y=0)
+    def widgetLogs(self):  
+        self.top=Toplevel()
+        self.top.title('Discador de Chamada V1.0')
+        self.top.iconbitmap('image/phone.ico')
+        self.top.resizable(FALSE,FALSE)
+        self.top.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+        #Imagem de fundo    
+        self.imagem4=Label(self.top)
+        self.imagem4['image']=self.amostra
+        self.imagem4.place(x=0,y=0)
+        #ListaBox   
+        self.labelLog=Label(self.top,text='Registro',font=self.atriFont,fg=self.atriFg)
+        self.labelLog.pack()
+        self.listaLog=Listbox(self.top,width=100,height=22)
+        self.listaLog.pack()
+        #Botões 
+        self.btnlargura=6
+        self.btnBuscar=Button(self.top,text='Buscar',fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
+        font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
+        self.btnFiltro=Button(self.top,text='Filtro',fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
+        font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
+        self.btnVoltar=Button(self.top,text='Voltar',command=self.top.destroy,fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
+        font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
+        self.btnBuscar.place(x=100,y=420)
+        self.btnFiltro.place(x=330,y=420)
+        self.btnVoltar.place(x=550,y=420)
 
-# Variáveis da personalização dos botões
-btn_largura=10
-btn_altura=3
-btn_bd=3
-btn_relief=GROOVE
-btn_bg='#e0ebeb'
-btn_fg='#002e4d'
-btn_font=('Verdana 25 bold')
-
-#Tela de pesquisa
-def widgetPesquisar():
-    #Inicialização da top level
-    top=Toplevel()
-    top.title('Discador de Chamada V1.0')
-    top.iconbitmap('image/phone.ico')
-    top.resizable(FALSE,FALSE)
-    top.geometry('{}x{}+{}+{}'.format(largura,altura,posx,posy))
-    #Imagem de fundo    
-    label= Label(top,text="iai",image=photo)# keep a reference!
-    label.image=photo
-    label.place(x=0,y=0)
-def widgetInserir():
-    #Inicialização da top level
-    top=Toplevel()
-    top.title('Discador de Chamada V1.0')
-    top.iconbitmap('image/phone.ico')
-    top.resizable(FALSE,FALSE)
-    top.geometry('{}x{}+{}+{}'.format(largura,altura,posx,posy))
-    #Imagem de fundo    
-    label= Label(top,text="iai",image=photo)# keep a reference!
-    label.image=photo
-    label.place(x=0,y=0)
-def widgetLog():
-
-    #Inicialização da top level
-    top=Toplevel()
-    top.title('Log')
-    top.iconbitmap('image/phone.ico')
-    top.resizable(FALSE,FALSE)
-    top.geometry('{}x{}+{}+{}'.format(largura,altura,posx,posy))
-    #Imagem de fundo    
-    label= Label(top,text="iai",image=photo)# keep a reference!
-    label.image=photo
-    label.place(x=0,y=0)
-    #ListaBox   
-    labellog=Label(top,text='Registro',font=btn_font,fg=btn_fg)
-    labellog.pack()
-    listalog=Listbox(top,width=100,height=22)
-    listalog.pack()
-    btnBuscar=Button(top,text='Buscar',fg=btn_fg,bd=btn_bd,relief=btn_relief,font=btn_font,bg=btn_bg,width=6)
-    btnFiltro=Button(top,text='Filtro',fg=btn_fg,bd=btn_bd,relief=btn_relief,font=btn_font,bg=btn_bg,width=6)
-    btnVoltar=Button(top,text='Voltar',command=top.destroy,fg=btn_fg,bd=btn_bd,relief=btn_relief,font=btn_font,bg=btn_bg,width=6)
-    btnBuscar.place(x=100,y=420)
-    btnFiltro.place(x=330,y=420)
-    btnVoltar.place(x=550,y=420)
-    
-    
-#Frame
-frame_a=Frame(root).place()
-frame_b=Frame(root).place()
-
-# Botões primeiro frame
-
-btn_buscar=Button(frame_a,command=widgetPesquisar,text='Pesquisar',bd=btn_bd,relief=btn_relief,fg=btn_fg,width=btn_largura,height=btn_altura,bg=btn_bg,font=btn_font)
-btn_buscar.place(x=80,y=50)
-btn_buscar.bind('<Return>') 
-
-
-btn_ligar=Button(frame_a,command=widgetInserir,text='Inserir', fg=btn_fg,bd=btn_bd,width=btn_largura,height=btn_altura, relief=btn_relief ,bg=btn_bg,font=btn_font)
-btn_ligar.place(x=480,y=50)
-btn_ligar.bind('<Return>')
-
-# Botões segundo frame
-
-btn_logs=Button(frame_b,command=widgetLog,text='Logs',fg=btn_fg,bd=btn_bd,width=btn_largura,height=btn_altura,relief=btn_relief ,bg=btn_bg,font=btn_font)
-btn_logs.place(x=80,y=250)
-btn_logs.bind('<Return>')
-
-
-btn_executar=Button(frame_b, text='Executar', fg=btn_fg,bd=btn_bd,width=btn_largura,height=btn_altura, relief=btn_relief ,bg=btn_bg,font=btn_font)
-btn_executar.place(x=480,y=250)
-btn_executar.bind('<Return>')
-
-
-
-
-
-root.geometry('{}x{}+{}+{}'.format(largura,altura,posx,posy))
-root.mainloop()
-
+if __name__ == "__main__":  
+    root=Tk()
+    app=CallManager(root)
+    root.mainloop()
+             
