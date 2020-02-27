@@ -19,6 +19,11 @@ class CallManager:
         self.atriBg='#e0ebeb'
         self.atriFg='#002e4d'
         self.atriFont=('Verdana 25 bold')
+        self.atriFont=('Verdana 25 bold')
+        self.atriFont2=('Verdana 10 bold')
+        self.atriFont3 = ('Verdana 12 bold')
+        self.contador=0
+        self.py=50
         #Frame
         self.frameA=Frame(master).place()
         self.frameB=Frame(master).place()
@@ -75,6 +80,7 @@ class CallManager:
         self.btnExecutar.bind('<Return>')
         #Tamanho da tela 
         self.master.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+        
     def widgetPesquisar(self):
         #Inicialização da top level
         self.top=Toplevel()
@@ -86,6 +92,7 @@ class CallManager:
         self.imagem2=Label(self.top)
         self.imagem2['image']=self.amostra
         self.imagem2.place(x=0,y=0)
+
     def widgetInserir(self):
         self.top=Toplevel()
         self.top.title('Discador de Chamada V1.0')
@@ -96,6 +103,27 @@ class CallManager:
         self.imagem3=Label(self.top)
         self.imagem3['image']=self.amostra
         self.imagem3.place(x=0,y=0)
+
+        # Parte de adicionar
+        self.labelAdicionar = Label(self.top, text='Adicionar', font=self.atriFont2, fg=self.atriFg)
+        self.labelAdicionar.place(x=130, y=30)
+        self.ent = Entry(self.top, width=20)
+        self.ent.place(x=100, y=80)
+        self.btnAdicionar = Button(self.top, command=self.botaoAdicionar,text='+', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont2, bg=self.atriBg)
+        self.btnAdicionar.place(x=225, y=76)
+        # Parte do progesso
+        self.labelProgresso = Label(self.top, text='Progresso', font=self.atriFont2, fg=self.atriFg)
+        self.labelProgresso.place(x=450, y=30)
+        self.listaProgresso = Listbox(self.top, width=70, height=18)
+        self.listaProgresso.place(x=275, y=80)
+
+        # Botoes rodape
+        self.btnVoltar = Button(self.top, text='Voltar', command=self.top.destroy, fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief,font=self.atriFont3, bg=self.atriBg, width=6)
+        self.btnInserir = Button(self.top, text='Inserir', fg=self.atriFg, command=self.insereDado, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont3, bg=self.atriBg, width=6)
+        self.btnLimpar = Button(self.top, text='Limpar', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont3, bg=self.atriBg, width=6)
+        self.btnVoltar.place(x=100, y=420)
+        self.btnInserir.place(x=360, y=420)
+
     def widgetLogs(self):  
         self.top=Toplevel()
         self.top.title('Discador de Chamada V1.0')
@@ -122,6 +150,17 @@ class CallManager:
         self.btnBuscar.place(x=100,y=420)
         self.btnFiltro.place(x=330,y=420)
         self.btnVoltar.place(x=550,y=420)
+
+    def botaoAdicionar(self):
+        if (self.contador<4):
+            self.ent = Entry(self.top, width=20)
+            self.ent.place(x=100, y=(80+self.py))
+            self.btnAdicionar = Button(self.top,command=self.botaoAdicionar, text='+', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont2, bg=self.atriBg)
+            self.btnAdicionar.place(x=225, y=(76+self.py))
+            self.py+=50
+            self.contador+=1
+        
+        
 
 if __name__ == "__main__":  
     root=Tk()
