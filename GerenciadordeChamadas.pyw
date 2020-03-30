@@ -11,6 +11,11 @@ class CallManager:
         master.title('Discador de Chamada V1.0')
         master.iconbitmap('image/phone.ico')
         master.resizable(FALSE,FALSE)
+         
+        #Variavel para indica que a tela top level não esta aberta
+        self.topPesquisar=None
+        self.topInserir=None
+        self.topLogs=None
         # Variáveis da personalização dos botões
         self.atriLargura=10
         self.atriAltura=3
@@ -83,83 +88,129 @@ class CallManager:
         
     def widgetPesquisar(self):
         #Inicialização da top level
-        self.top=Toplevel()
-        self.top.title('Discador de Chamada V1.0')
-        self.top.iconbitmap('image/phone.ico')
-        self.top.resizable(FALSE,FALSE)
-        self.top.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
-        #Imagem de fundo    
-        self.imagem2=Label(self.top)
-        self.imagem2['image']=self.amostra
-        self.imagem2.place(x=0,y=0)
+        if self.topPesquisar is None:
+            self.topPesquisar=Toplevel()
+            self.topPesquisar.title('Discador de Chamada V1.0')
+            self.topPesquisar.iconbitmap('image/phone.ico')
+            self.topPesquisar.resizable(FALSE,FALSE)
+            self.topPesquisar.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+           
+            #Comando para poder abrir a tela novamente
+            self.topPesquisar.protocol("WM_DELETE_WINDOW", self.fechar_widgetPesquisar)
+
+            #Imagem de fundo    
+            self.imagem2=Label(self.topPesquisar)
+            self.imagem2['image']=self.amostra
+            self.imagem2.place(x=0,y=0)
+          
+        else:
+        
+            self.topPesquisar.lift()
+            
 
     def widgetInserir(self):
-        self.top=Toplevel()
-        self.top.title('Discador de Chamada V1.0')
-        self.top.iconbitmap('image/phone.ico')
-        self.top.resizable(FALSE,FALSE)
-        self.top.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
-        #Imagem de fundo    
-        self.imagem3=Label(self.top)
-        self.imagem3['image']=self.amostra
-        self.imagem3.place(x=0,y=0)
+        if self.topInserir is None:
+            self.topInserir=Toplevel()
+            self.topInserir.title('Discador de Chamada V1.0')
+            self.topInserir.iconbitmap('image/phone.ico')
+            self.topInserir.resizable(FALSE,FALSE)
+            self.topInserir.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+            #Imagem de fundo    
+            self.imagem3=Label(self.topInserir)
+            self.imagem3['image']=self.amostra
+            self.imagem3.place(x=0,y=0)
+            
+           
+            #Comando para poder abrir a tela novamente
+            self.topInserir.protocol("WM_DELETE_WINDOW", self.fechar_widgeInserir)
 
-        # Parte de adicionar
-        self.labelAdicionar = Label(self.top, text='Adicionar', font=self.atriFont2, fg=self.atriFg)
-        self.labelAdicionar.place(x=130, y=30)
-        self.ent = Entry(self.top, width=20)
-        self.ent.place(x=100, y=80)
-        self.btnAdicionar = Button(self.top, command=self.botaoAdicionar,text='+', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont2, bg=self.atriBg)
-        self.btnAdicionar.place(x=225, y=76)
-        # Parte do progesso
-        self.labelProgresso = Label(self.top, text='Progresso', font=self.atriFont2, fg=self.atriFg)
-        self.labelProgresso.place(x=450, y=30)
-        self.listaProgresso = Listbox(self.top, width=70, height=18)
-        self.listaProgresso.place(x=275, y=80)
+            # Parte de adicionar
+            self.labelAdicionar = Label(self.topInserir, text='Adicionar', font=self.atriFont2, fg=self.atriFg)
+            self.labelAdicionar.place(x=130, y=30)
+            self.ent = Entry(self.topInserir, width=20)
+            self.ent.place(x=100, y=80)
+            self.btnAdicionar = Button(self.topInserir, command=self.botaoAdicionar,text='+', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont2, bg=self.atriBg)
+            self.btnAdicionar.place(x=225, y=76)
+            # Parte do progesso
+            self.labelProgresso = Label(self.topInserir, text='Progresso', font=self.atriFont2, fg=self.atriFg)
+            self.labelProgresso.place(x=450, y=30)
+            self.listaProgresso = Listbox(self.topInserir, width=70, height=18)
+            self.listaProgresso.place(x=275, y=80)
 
-        # Botoes rodape
-        self.btnVoltar = Button(self.top, text='Voltar', command=self.top.destroy, fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief,font=self.atriFont3, bg=self.atriBg, width=6)
-        self.btnInserir = Button(self.top, text='Inserir', fg=self.atriFg, command=self.insereDado, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont3, bg=self.atriBg, width=6)
-        self.btnLimpar = Button(self.top, text='Limpar', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont3, bg=self.atriBg, width=6)
-        self.btnVoltar.place(x=100, y=420)
-        self.btnInserir.place(x=360, y=420)
+            # Botoes rodape
+            self.btnVoltar = Button(self.topInserir, text='Voltar', command=self.fechar_widgeInserir, fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief,font=self.atriFont3, bg=self.atriBg, width=6)
+            self.btnInserir = Button(self.topInserir, text='Inserir', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont3, bg=self.atriBg, width=6)
+            self.btnLimpar = Button(self.topInserir, text='Limpar', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont3, bg=self.atriBg, width=6)
+            self.btnVoltar.place(x=100, y=420)
+
+            self.btnInserir.place(x=360, y=420)
+        else:
+            self.topInserir.lift()
+        
+       
 
     def widgetLogs(self):  
-        self.top=Toplevel()
-        self.top.title('Discador de Chamada V1.0')
-        self.top.iconbitmap('image/phone.ico')
-        self.top.resizable(FALSE,FALSE)
-        self.top.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
-        #Imagem de fundo    
-        self.imagem4=Label(self.top)
-        self.imagem4['image']=self.amostra
-        self.imagem4.place(x=0,y=0)
-        #ListaBox   
-        self.labelLog=Label(self.top,text='Registro',font=self.atriFont,fg=self.atriFg)
-        self.labelLog.pack()
-        self.listaLog=Listbox(self.top,width=100,height=22)
-        self.listaLog.pack()
-        #Botões 
-        self.btnlargura=6
-        self.btnBuscar=Button(self.top,text='Buscar',fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
-        font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
-        self.btnFiltro=Button(self.top,text='Filtro',fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
-        font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
-        self.btnVoltar=Button(self.top,text='Voltar',command=self.top.destroy,fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
-        font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
-        self.btnBuscar.place(x=100,y=420)
-        self.btnFiltro.place(x=330,y=420)
-        self.btnVoltar.place(x=550,y=420)
+        if self.topLogs is None:
+            self.topLogs=Toplevel()
+            self.topLogs.title('Discador de Chamada V1.0')
+            self.topLogs.iconbitmap('image/phone.ico')
+            self.topLogs.resizable(FALSE,FALSE)
+            self.topLogs.geometry('{}x{}+{}+{}'.format(self.largura,self.altura,self.posx,self.posy))
+            #Imagem de fundo    
+            self.imagem4=Label(self.topLogs)
+            self.imagem4['image']=self.amostra
+            self.imagem4.place(x=0,y=0)
+
+            #ListaBox   
+            self.labelLog=Label(self.topLogs,text='Registro',font=self.atriFont,fg=self.atriFg)
+            self.labelLog.pack()
+            self.listaLog=Listbox(self.topLogs,width=100,height=22)
+            self.listaLog.pack()
+            #Botões 
+            self.btnlargura=6
+            self.btnBuscar=Button(self.topLogs,text='Buscar',fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
+            font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
+            self.btnFiltro=Button(self.topLogs,text='Filtro',fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
+            font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
+            self.btnVoltar=Button(self.topLogs,text='Voltar',command=self.fechar_widgetLogs,fg=self.atriFg,bd=self.atriBd,relief=self.atriRelief,
+            font=self.atriFont,bg=self.atriBg,width=self.btnlargura)
+            self.btnBuscar.place(x=100,y=420)
+            self.btnFiltro.place(x=330,y=420)
+            self.btnVoltar.place(x=550,y=420)
+            #Comando para poder abrir a tela novamente
+            self.topLogs.protocol("WM_DELETE_WINDOW", self.fechar_widgetLogs)
+        else:
+            self.topLogs.lift()
 
     def botaoAdicionar(self):
         if (self.contador<4):
-            self.ent = Entry(self.top, width=20)
+            self.ent = Entry(self.topInserir, width=20)
             self.ent.place(x=100, y=(80+self.py))
-            self.btnAdicionar = Button(self.top,command=self.botaoAdicionar, text='+', fg=self.atriFg, bd=self.atriBd, relief=self.atriRelief, font=self.atriFont2, bg=self.atriBg)
             self.btnAdicionar.place(x=225, y=(76+self.py))
             self.py+=50
             self.contador+=1
+
+    def fechar_widgetPesquisar(self):
+        # reseta de novo em None para recriar quando abrir
+        self.topPesquisar.destroy()
+        self.topPesquisar = None
+    def fechar_widgeInserir(self):  
         
+        # Reseta o Botão adicionar  
+        self.contador=0
+        self.py=50
+        self.ent = Entry(self.topInserir, width=20)
+        self.ent.place(x=100, y=80)
+        self.btnAdicionar.place(x=225, y=76)
+
+        # reseta de novo em None para recriar quando abrir
+        self.topInserir.destroy()
+        self.topInserir = None    
+    def fechar_widgetLogs(self):   
+        # reseta de novo em None para recriar quando abrir 
+        self.topLogs.destroy()
+        self.topLogs = None    
+           
         
 
 if __name__ == "__main__":  
